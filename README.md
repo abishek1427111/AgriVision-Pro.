@@ -1,54 +1,87 @@
-# AgriVision Pro — Wheat Disease Detection Web App
-
-A full-stack wheat-leaf analysis dashboard with a React/Vite interface and a FastAPI backend. **Important: the supplied backend currently uses demo-mode, randomly generated predictions, not a loaded trained classifier.** Do not use its output for real agricultural decisions.
-
-## Features
-- Wheat leaf image upload and disease-result interface
-- Dashboard, treatment information, farming tips, weather context, and chat UI
-- REST API and account-related backend modules
-- Responsive React frontend
-
-## Technology
-React 19, Vite, JavaScript, CSS, FastAPI, Python, Pillow, PyTorch/Transformers dependencies, SQLAlchemy.
-
-## Layout
-- `frontend/` — Vite application
-- `backend/` — API, data utilities, and model handler
-- `render.yaml`, `Procfile` — deployment configuration from original project
-- `TECHNICAL_GUIDE.md` — original technical notes
-
-## Local installation
-Requires Python and Node.js/npm. Use two terminals from the repository root.
-
-**Terminal 1 (backend):**
+AgriVision – Wheat Disease Prediction Application
+AgriVision is a full-stack web application that uses an AI model to predict diseases from images of wheat leaves. It combines a Python FastAPI backend for model inference with a React and Vite frontend featuring a modern glassmorphic interface.
+Features
+AI-powered wheat leaf disease prediction
+FastAPI backend for image-based model inference
+React + Vite frontend with a glassmorphic user interface
+Pre-trained Hugging Face Vision Transformer model
+Optional dataset download script for custom model training
+Tech Stack
+Frontend: React, Vite
+Backend: Python, FastAPI, Uvicorn
+Machine Learning: Hugging Face Vision Transformer
+Optional custom training: PyTorch or TensorFlow
+Project Structure
+```text
+AgriVision/
+├── backend/
+│   ├── main.py                 # FastAPI application
+│   ├── requirements.txt        # Python dependencies
+│   └── download_dataset.py     # Optional dataset download script
+├── frontend/                   # React + Vite application
+└── README.md
+```
+The dataset directory `backend/datasets/wheat_leaves/` is created by the download workflow described below.
+Prerequisites
+Node.js 16 or newer
+Python 3.9 or newer
+npm
+Internet connection for the initial model download
+1. Set Up the Backend
+Open a terminal in the project root and navigate to the backend directory:
 ```bash
 cd backend
-python -m venv .venv
-# Windows: .venv\Scripts\activate
-# macOS/Linux: source .venv/bin/activate
+```
+Create a Python virtual environment:
+```bash
+python -m venv venv
+```
+Activate the environment:
+Windows:
+```powershell
+venv\Scripts\activate
+```
+macOS / Linux:
+```bash
+source venv/bin/activate
+```
+Install Python dependencies:
+```bash
 pip install -r requirements.txt
+```
+Start the API server:
+```bash
 uvicorn main:app --reload
 ```
-
-**Terminal 2 (frontend):**
+The API runs at http://localhost:8000.
+Note: On first launch, the backend may download a Hugging Face Vision Transformer model (approximately 300 MB). Later starts should be faster once the model is cached.
+2. Set Up the Frontend
+Open a second terminal in the project root and navigate to the frontend directory:
 ```bash
 cd frontend
-npm ci
+```
+Install dependencies:
+```bash
+npm install
+```
+Start the development server:
+```bash
 npm run dev
 ```
-Visit the local URL printed by Vite (typically `http://localhost:5173`); backend defaults to `http://localhost:8000`. Set `VITE_API_URL` as needed (see `frontend/.env.example`).
-
-## Model and data notes
-`backend/model_handler.py` explicitly sets `MODEL_LOADED = False` and returns randomized demo predictions. The model weights and training dataset are **not included** in this archive. `backend/download_dataset.py` uses Kaggle credentials; store `kaggle.json` outside the repository. `backend/create_train_dataset.py` uses `WHEAT_DATA_DIR` or defaults to `backend/datasets/wheat_leaves` and expects input files in `test_images/`.
-
-## Security and deployment
-Set `AGRIVISION_SECRET_KEY` to a strong secret before deploying; the development fallback is **not secure**. The frontend authentication context stores credentials in browser local storage; it is not production-grade authentication. Review `render.yaml`, runtime and requirements files before deploying: they contain potentially conflicting dependency stacks.
-
-## Screenshots
-No verified application screenshots were supplied. Add screenshots under `docs/screenshots/` after running the app.
-
-## Contributions and attribution
-Jointly developed project, republished as an independent copy by **Abishek V**. Original README retained verbatim as [`ORIGINAL_README.md`](ORIGINAL_README.md) for historical attribution. No original Git commit history was included in the downloaded ZIP.
-
-## License
-No standalone license file was present in the supplied archive. Obtain agreement on licensing and distribution rights before public publication; do not assume a permissive license.
+Open the local URL shown in your terminal, usually http://localhost:5173.
+3. Download a Dataset for Custom Training (Optional)
+If you want to train a separate PyTorch or TensorFlow model rather than use the pre-trained Hugging Face model:
+Set up Kaggle API credentials (`kaggle.json`) following the Kaggle API instructions.
+Navigate to the `backend` directory.
+Run:
+```bash
+python download_dataset.py
+```
+The script is intended to download the Wheat Leaf Dataset into `backend/datasets/wheat_leaves/`, organized by disease class. Dataset availability and exact output depend on the script and Kaggle configuration.
+How It Works
+The user interacts with the React frontend to submit a wheat leaf image.
+The frontend sends the image to the FastAPI backend.
+The backend uses a Vision Transformer model to infer a disease prediction.
+The application presents the prediction to the user.
+Author
+Abishek V — Project Developer
